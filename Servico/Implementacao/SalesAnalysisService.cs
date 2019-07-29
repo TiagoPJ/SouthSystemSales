@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Servico.Helper;
+using System.Threading;
 
 namespace Servico.Implementacao
 {
@@ -35,14 +36,17 @@ namespace Servico.Implementacao
                 _listClient = new List<Client>();
                 _listSales = new List<Sales>();
 
+                // Checks if the file is not being used by another process
+                while (SalesAnalysisRepository.IsFileLocked(filePath))
+                {
+                    Thread.Sleep(1500);
+                }
+                 
                 string fileName = Path.GetFileNameWithoutExtension(filePath);
-                var lines = ReadFile(filePath);
+                var lines = SalesAnalysisRepository.ReadFile(filePath);
                 ProcessLines(lines);
                 ProcessResult(string.Concat(outFileDirectory, fileName, ".done.dat"));
-
-                if (File.Exists(filePath))
-                    //Delete file processed.
-                    File.Delete(filePath);
+                File.Delete(filePath);
             }
             catch (Exception ex)
             {
@@ -62,15 +66,6 @@ namespace Servico.Implementacao
         private static T BuildObject<T>(object[] args)
         {
             return (T)Activator.CreateInstance(typeof(T), args);
-        }
-
-        /// <summary>
-        /// Process the file.
-        /// </summary>
-        /// <param name="filePath">Input file directory</param>
-        private static string[] ReadFile(string filePath)
-        {
-            return File.ReadAllLines(filePath);
         }
 
         /// <summary>
@@ -106,6 +101,7 @@ namespace Servico.Implementacao
 
                         // Receive List of Itens
                         data[1] = itens;
+
                         _listSales.Add(BuildObject<Sales>(data));
                         break;
                     default:
