@@ -1,7 +1,7 @@
 # SalesAnalysis
 
 Basta baixar o projeto e abrir o mesmo no Visual Studio 17 e executar o projeto! (Api .NET Core)
-Neste momento o projeto irá verificar a existência dos diretórios em "@"HOMEPATH", caso não possua, o sistema irá criar os mesmos de acordo com a estrutura abaixo:
+Neste momento o projeto irá verificar a existência dos diretórios em "@HOMEPATH", caso não possua, o sistema irá criar os mesmos de acordo com a estrutura abaixo:
 
 ### In = @"HOMEPATH\data\in\";
 ### Out = @"HOMEPATH\data\out\";
